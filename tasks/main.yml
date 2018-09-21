@@ -1,0 +1,45 @@
+---
+# tasks file for php
+- name: Install remi repository
+  yum:
+    name: "{{ php_remi_repo_url }}"
+    state: present
+
+- name: Import remi repo GPG key
+  rpm_key:
+    key: "{{ php_remi_repo_gpg_key_url }}"
+    state: present
+
+- name: Install yum-utils
+  yum:
+    name: yum-utils
+    state: present
+
+- name: enable remi repo php version
+  shell: 'yum-config-manager --enable {{ php_remi_version }}'
+
+- name: Install php base packages
+  yum: state=latest name={{ item }}
+  with_items:
+    - php
+    - php-fpm
+    - php-common
+
+- name: Install php extra packages
+  yum: state=latest name={{ item }}
+  with_items:
+    - php-mysqlnd 
+    - php-pecl-memcache 
+    - php-pecl-memcached 
+    - php-gd 
+    - php-ldap
+    - php-odbc
+    - php-mbstring 
+    - php-mcrypt 
+    - php-xml 
+    - php-xmlrpc
+    - php-pecl-apc 
+    - php-cli 
+    - php-pear 
+    - php-pdo
+    - php-soap
